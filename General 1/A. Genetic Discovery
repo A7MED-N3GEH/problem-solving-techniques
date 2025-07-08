@@ -1,0 +1,29 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main()
+{
+    // ( إِنَّ اللَّهَ وَمَلَائِكَتَهُ يُصَلُّونَ عَلَى النَّبِيِّ ۚ يَا أَيُّهَا الَّذِينَ آمَنُوا صَلُّوا عَلَيْهِ وَسَلِّمُوا تَسْلِيمًا )
+    int n;
+    cin >> n;
+    vector<string> arr(n);
+    
+    for (int i = 0; i < n; i++) {
+        cin >> arr[i];
+    }
+    int sz = arr[0].size();
+    string ans(sz, '.');
+
+    for (int i = 0; i < sz; i++) {
+        for (int j = 0; j < n; j++) {
+            if (arr[j][i] != '.') { 
+                ans[i] = arr[j][i];
+                break;
+            }
+        }
+    }
+    
+    cout << ans << '\n';
+    
+    return 0;
+}
