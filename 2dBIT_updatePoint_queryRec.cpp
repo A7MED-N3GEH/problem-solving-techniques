@@ -3,44 +3,48 @@ using namespace std;
 #define int long long
 //update point and get sum rectangle
 //https://cses.fi/problemset/task/1739
-struct BIT2D
-{
+// Point update + Rectangle sum query  , Rectangle update + Point query
+struct BIT2D {
     int n, m;
     vector<vector<int>> tree;
-    BIT2D(int _n, int _m)
-    {
-        n = _n + 5, m = _m + 5;
-        tree = vector<vector<int>>(n, vector<int>(m));
+
+    BIT2D(int _n, int _m) {
+        n = _n + 5;
+        m = _m + 5;
+        tree.assign(n, vector<int>(m, 0));
     }
+    // Point Update + Rectangle Query 
     // update a single point (x,y) by val
-    void update(int x, int y, int val)
-    {
-        for (; x < n; x |= (x + 1))
-        {
-            for (int o = y; o < m; o |= (o + 1))
-            {
-                tree[x][o] += val;
-            }
-        }
+    void update(int x, int y, int val) {
+        for (int i = x; i < n; i |= (i + 1))
+            for (int j = y; j < m; j |= (j + 1))
+                tree[i][j] += val;
     }
-    // get from (0,0) to (x,y)
-    int get(int x, int y)
-    {
+    // get prefix sum from (0,0) to (x,y)
+    int get(int x, int y) {
         int ans = 0;
-        for (; x >= 0; x = (x & (x + 1)) - 1)
-        {
-            for (int o = y; o >= 0; o = (o & (o + 1)) - 1)
-            {
-                ans += tree[x][o];
-            }
-        }
+        for (int i = x; i >= 0; i = (i & (i + 1)) - 1)
+            for (int j = y; j >= 0; j = (j & (j + 1)) - 1)
+                ans += tree[i][j];
         return ans;
     }
-    // Returns sum of all elements in rectangle defined by
-    // top-left (t,l) and bottom-right (b,r)
-    int query(int l, int r, int t, int b)
-    {
+
+    // sum of rectangle from top-left (t,l) to bottom-right (b,r)
+    int query(int l, int r, int t, int b) {
         return get(b, r) - get(t - 1, r) - get(b, l - 1) + get(t - 1, l - 1);
+    }
+
+    // Rectangle Update + Point Query
+    // update a rectangle from (t,l) to (b,r) by val
+    void updateRect(int t, int l, int b, int r, int val) {
+        update(t, l, val);
+        update(t, r + 1, -val);
+        update(b + 1, l, -val);
+        update(b + 1, r + 1, val);
+    }
+    // get value at a single point (x,y) after rectangle updates
+    int getPoint(int x, int y) {
+        return get(x, y);
     }
 };
 void nageh()
